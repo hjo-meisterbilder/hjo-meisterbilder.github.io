@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dreiklang – Bilder</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bilder">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1b1a18">
+<script>
+(function(){
+ if(!('serviceWorker' in navigator))return;
+ var hatteAlt=!!navigator.serviceWorker.controller, schon=false;
+ function hinweis(){
+  if(schon)return;schon=true;
+  var d=document.createElement('button');
+  d.textContent='Neue Fassung geladen \u2013 hier tippen zum Anzeigen';
+  d.setAttribute('style','position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:99999;background:#1F4E79;color:#fff;font:600 16px system-ui,sans-serif;padding:13px 20px;border:0;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.45);cursor:pointer;min-height:44px');
+  d.onclick=function(){location.reload()};
+  (document.body||document.documentElement).appendChild(d);
+ }
+ /* Fortschritt, solange eine neue Fassung im Hintergrund geladen wird (meldet der Service Worker) */
+ var lade=null;
+ function laden(n,von){
+  if(schon||!hatteAlt)return;
+  if(!lade){lade=document.createElement('div');lade.setAttribute('role','status');
+   lade.setAttribute('style','position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:99998;background:rgba(30,28,26,.95);color:#f3efe8;font:600 15px system-ui,sans-serif;padding:11px 18px;border-radius:12px;border:1px solid #3a3632;box-shadow:0 4px 18px rgba(0,0,0,.45);pointer-events:none');
+   (document.body||document.documentElement).appendChild(lade);}
+  lade.textContent='Neue Fassung wird geladen \u2026 '+n+' von '+von+' \u2013 App bitte offen lassen';
+ }
+ navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.typ==='laden')laden(e.data.n,e.data.von);});
+ navigator.serviceWorker.addEventListener('controllerchange',function(){if(lade){lade.remove();lade=null;}if(hatteAlt)hinweis();});
+ window.addEventListener('load',function(){
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){
+   r.update().catch(function(){});   /* beim Öffnen sofort nach einer neuen Fassung fragen */
+   document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});
+  }).catch(function(e){console.warn('Service Worker nicht registriert',e)});
+ });
+})();
+</script>
+
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#121110;--fl:#1d1b19;--fl2:#262320;--li:#3a3632;--t:#f3efe8;--mu:#b9b1a4;--akz:#f0904a;--nuss:#a8774f;
+  --r:14px;--kopf:#1b1a18;--eiche:#a98a68;
+  --oben:env(safe-area-inset-top,0px);--unten:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--t);font:17px/1.4 -apple-system,system-ui,"Segoe UI",sans-serif;padding-top:var(--oben);-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:var(--oben);background:var(--kopf);z-index:60;pointer-events:none}
+button{font:inherit;color:inherit}
+a{color:inherit}
+
+/* ---------- Kopf ---------- */
+/* Kopf wie in der Stücklisten-App: großes Logo, Titel in gesperrten Großbuchstaben, Zeile darunter */
+.kopf{background:var(--kopf);color:var(--t);border-bottom:1px solid var(--li);padding-block:20px 16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.kopf .innen{max-width:1400px;margin:auto;display:flex;flex-wrap:wrap;align-items:center;gap:14px 34px}
+.logo{display:block;height:86px;width:auto;max-width:100%}
+.titel{min-width:0}
+.kopf h1{font-family:"Segoe UI Light","Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;font-weight:300;font-size:24px;letter-spacing:.14em;text-transform:uppercase;margin:0;text-wrap:balance}
+.kopf p{margin:6px 0 0;font-size:14px;color:var(--mu)}
+@media (max-width:700px){.logo{height:66px}.kopf h1{font-size:19px}}
+/* Reiter-Leiste bleibt beim Scrollen oben stehen */
+nav{position:sticky;top:var(--oben);z-index:50;background:rgba(27,26,24,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--li);display:flex;gap:6px;padding:8px max(12px,env(safe-area-inset-left));overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{flex:none;display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 16px;border-radius:22px;text-decoration:none;font-weight:600;font-size:16px;color:var(--mu);border:1px solid transparent}
+nav a.an{background:var(--t);color:#1b1a18}
+nav a:not(.an):hover{border-color:var(--li);color:var(--t)}
+nav svg{width:18px;height:18px}
+
+main{max-width:1400px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-left)) calc(40px + var(--unten))}
+.seite{display:none}.seite.an{display:block;animation:ein .25s ease}
+@keyframes ein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- Startseite ---------- */
+.held{position:relative;border-radius:22px;overflow:hidden;background:#000;aspect-ratio:3/2;max-height:60vh;width:100%;cursor:zoom-in;display:block;border:0;padding:0}
+.held img{width:100%;height:100%;object-fit:cover;display:block}
+.held .schrift{position:absolute;left:0;right:0;bottom:0;padding:60px 26px 22px;background:linear-gradient(transparent,rgba(0,0,0,.72));text-align:left}
+.held .h2{display:block;margin:0;font-size:clamp(34px,6vw,60px);line-height:1;font-weight:800;letter-spacing:.5px;color:#fff}
+.held .p{display:block;margin:8px 0 0;font-size:17px;color:#e9e2d6}
+.kacheln{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+@media (max-width:820px){.kacheln{grid-template-columns:repeat(2,1fr)}}
+.kachel{position:relative;display:block;border-radius:var(--r);overflow:hidden;background:var(--fl);aspect-ratio:4/3;text-decoration:none;border:0;padding:0;cursor:pointer;width:100%}
+.kachel img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.kachel:hover img{transform:scale(1.04)}
+.kachel .unten{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 13px;background:linear-gradient(transparent,rgba(0,0,0,.78));text-align:left;color:#fff}
+.kachel b{display:block;font-size:20px}
+.kachel span{font-size:15px;color:#e4dccf}
+.kachel .marke{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:14px;font-weight:600;padding:5px 10px;border-radius:20px}
+.kachel.dreid{background:#a4a4a4}
+
+/* ---------- Gruppenseiten ---------- */
+h2.titel{font-size:28px;margin:6px 0 2px}
+p.unter{margin:0 0 16px;color:var(--mu)}
+h3{font-size:20px;margin:26px 0 10px;display:flex;align-items:center;gap:10px}
+h3 small{font-size:15px;font-weight:500;color:var(--mu)}
+.raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.raster.breit{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.bild{position:relative;display:block;border:0;padding:0;border-radius:10px;overflow:hidden;background:var(--fl);aspect-ratio:3/2;cursor:zoom-in;width:100%}
+.bild img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease,opacity .3s}
+.bild:hover img{transform:scale(1.03)}
+.bild .txt{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;font-size:14px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75));text-align:left}
+.bild.plan{aspect-ratio:auto;background:#fff}.bild.plan img{object-fit:contain;aspect-ratio:3/2;background:#fff}
+.bild .spiel{position:absolute;inset:0;display:grid;place-items:center}
+.bild .spiel i{width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center;border:2px solid rgba(255,255,255,.85)}
+.bild .spiel svg{width:26px;height:26px;margin-left:4px;fill:#fff}
+.hinweis{background:var(--fl2);border-left:4px solid var(--akz);padding:10px 14px;border-radius:8px;color:var(--t);font-size:16px;margin:0 0 12px}
+
+.schalter{display:inline-flex;background:var(--fl2);border-radius:24px;padding:3px;gap:2px}
+.schalter button{min-height:40px;min-width:92px;padding:0 16px;border:0;border-radius:20px;background:transparent;color:var(--mu);font-weight:600;cursor:pointer}
+.schalter button.an{background:var(--t);color:#1b1a18}
+
+footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--li);color:var(--mu);font-size:14px;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
+#offline.gut{color:#8fd19e}#offline.warn{color:#ffb27a}
+
+/* ---------- Großansicht ---------- */
+#gross{position:fixed;inset:0;z-index:100;background:#000;display:none;touch-action:none;user-select:none;-webkit-user-select:none;overscroll-behavior:contain}
+#gross.an{display:block;animation:einb .2s ease}
+@keyframes einb{from{opacity:0}to{opacity:1}}
+#buehne{position:absolute;inset:0;overflow:hidden}
+#buehne img{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;max-width:none;-webkit-user-drag:none}
+#buehne video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.leiste{position:absolute;left:0;right:0;display:flex;align-items:center;gap:10px;padding:0 max(12px,env(safe-area-inset-left));pointer-events:none;transition:opacity .25s}
+.leiste>*{pointer-events:auto}
+.leiste.oben{top:0;padding-top:calc(var(--oben) + 8px);padding-bottom:20px;background:linear-gradient(rgba(0,0,0,.65),transparent)}
+.leiste.unten{bottom:0;padding-bottom:calc(var(--unten) + 12px);padding-top:28px;background:linear-gradient(transparent,rgba(0,0,0,.7));justify-content:center;flex-wrap:wrap}
+#gross.ruhig .leiste,#gross.ruhig .pfeil{opacity:0;pointer-events:none}
+#zaehler{color:#ddd;font-size:15px;font-variant-numeric:tabular-nums;flex:none}
+#untertitel{flex:1;text-align:center;color:#fff;font-size:17px;font-weight:600;text-shadow:0 1px 3px #000;min-width:0}
+.rund{width:46px;height:46px;border-radius:50%;border:0;background:rgba(40,38,35,.8);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.rund svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round}
+.pfeil{position:absolute;top:50%;transform:translateY(-50%);transition:opacity .25s}
+#zurueckP{left:max(10px,env(safe-area-inset-left))}#weiterP{right:max(10px,env(safe-area-inset-right))}
+#tagabend{display:none}#tagabend.da{display:inline-flex}
+.lade{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:dreh 1s linear infinite;display:none}
+.lade.an{display:block}@keyframes dreh{to{transform:rotate(360deg)}}
+@media (max-width:600px){.held{aspect-ratio:4/3}.raster{grid-template-columns:repeat(2,1fr)}.raster.breit{grid-template-columns:1fr}.pfeil{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="kopf"><div class="innen"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" class="logo" role="img" aria-label="Schreinerei Obert" viewBox="0 0 370 156.8">
+<defs>
+<path id="font_1_54" d="M.067871097 .024414063V.079589847C.118001308 .0476888 .16878255 .03173828 .22021485 .03173828 .27490235 .03173828 .31640626 .043060304 .34472657 .065704349 .37304688 .08834839 .38720704 .120035808 .38720704 .1607666 .38720704 .19659424 .37768556 .22517395 .35864259 .24650574 .3395996 .2678477 .29833985 .29692588 .23486328 .33374024 .16389974 .37510173 .11897787 .40970866 .100097659 .43756105 .081217449 .46541343 .071777347 .49757896 .071777347 .5340576 .071777347 .5835673 .09098307 .6255849 .12939453 .6601105 .16780599 .6946462 .21907552 .71191409 .28320313 .71191409 .32486979 .71191409 .36653648 .70491537 .40820313 .69091799V.6401367C.3671875 .6586914 .32340495 .66796877 .27685548 .66796877 .22932942 .66796877 .19165039 .65590927 .16381836 .63179019 .13598633 .6076813 .12207031 .5770569 .12207031 .539917 .12207031 .50408938 .1315918 .47558595 .15063477 .45440675 .16967774 .4332377 .21077474 .40441386 .27392579 .36793519 .33935548 .3307953 .3828939 .29781089 .40454103 .26898194 .42618815 .240153 .43701173 .20701091 .43701173 .16955567 .43701173 .11580404 .41837565 .07199097 .38110353 .038116456 .3438314 .0042419435 .29117839-.0126953129 .22314453-.0126953129 .19905599-.0126953129 .17130535-.008951823 .13989258-.0014648438 .10847982 .0060221354 .084472659 .0146484379 .067871097 .024414063Z"/>
+<path id="font_1_38" d="M.5551758 .022460938C.49853517-.0009765625 .43945313-.0126953129 .3779297-.0126953129 .28222657-.0126953129 .20418294 .019470215 .14379883 .08380127 .08341471 .1481425 .053222658 .23210144 .053222658 .3356781 .053222658 .44936625 .0859375 .54049178 .15136719 .60905459 .21679688 .67762759 .29996745 .71191409 .4008789 .71191409 .45458985 .71191409 .50602218 .7032878 .5551758 .68603518V.6347656C.50602218 .65690109 .4542643 .66796877 .39990235 .66796877 .31201173 .66796877 .24055989 .63815817 .18554688 .578537 .13053386 .51892599 .103027347 .4396057 .103027347 .34057618 .103027347 .24511719 .12931316 .16977947 .18188477 .11456299 .23445638 .059346517 .30110679 .03173828 .38183595 .03173828 .44628907 .03173828 .50406906 .044270833 .5551758 .06933594V.022460938Z"/>
+<path id="font_1_43" d="M.5390625 0V.3359375H.1381836V0H.08984375V.7001953H.1381836V.3798828H.5390625V.7001953H.58691409V0H.5390625Z"/>
+<path id="font_1_53" d="M.4482422 0 .35498048 .20539856C.33577476 .24778748 .316569 .27623496 .29736329 .29074098 .27815757 .30524699 .254069 .3125 .22509766 .3125H.1381836V0H.08984375V.7001953H.2841797C.34602867 .7001953 .39461265 .6835327 .42993165 .6502075 .46525065 .6168925 .48291017 .5729268 .48291017 .51831057 .48291017 .46791587 .46842448 .42581178 .43945313 .3919983 .41048179 .35819499 .36995445 .33641563 .3178711 .32666017V.32470704C.34554038 .313619 .3725586 .2798767 .39892579 .22348023L.5029297 0H.4482422M.1381836 .6557617V.3564453H.25878907C.31217448 .3564453 .35457359 .37041728 .38598634 .3983612 .41739909 .4263153 .43310548 .46466575 .43310548 .5134125 .43310548 .5579376 .4189453 .59279379 .390625 .61798098 .3623047 .64316818 .32177735 .6557617 .26904298 .6557617H.1381836Z"/>
+<path id="font_1_40" d="M.08984375 0V.7001953H.4169922V.6557617H.1381836V.375H.39697267V.3310547H.1381836V.043945314H.43310548V0H.08984375Z"/>
+<path id="font_1_44" d="M.08984375 0V.7001953H.1381836V0H.08984375Z"/>
+<path id="font_1_49" d="M.58496096 0 .16796875 .56591799C.1595052 .5773112 .15201824 .5887044 .14550781 .60009768L.13916016 .6098633H.13720703C.13785808 .6013997 .1381836 .5911458 .1381836 .57910159V0H.08984375V.7001953H.12695313L.5410156 .13916016C.5501302 .12679036 .5600586 .111816409 .5708008 .09423828H.5732422C.57161459 .11702474 .5708008 .13655599 .5708008 .15283203V.7001953H.6191406V0H.58496096Z"/>
+<path id="font_1_50" d="M.3779297-.0126953129C.27897135-.0126953129 .20011394 .020202637 .14135742 .085998538 .082600917 .15180461 .053222658 .23731487 .053222658 .3425293 .053222658 .45425416 .08341471 .54374697 .14379883 .6110077 .20418294 .6782786 .2866211 .71191409 .39111329 .71191409 .4855143 .71191409 .56193038 .6795807 .6203613 .61491397 .6787923 .5502574 .7080078 .46548463 .7080078 .3605957 .7080078 .24463909 .6780599 .1534322 .61816409 .0869751 .55826827 .020528159 .4781901-.0126953129 .3779297-.0126953129M.3828125 .66796877C.30143229 .66796877 .23445638 .6384837 .18188477 .57951357 .12931316 .5205536 .103027347 .4433492 .103027347 .3479004 .103027347 .251475 .12792969 .17467244 .17773438 .117492679 .22753906 .06032308 .2939453 .03173828 .37695313 .03173828 .46354167 .03173828 .5320638 .05999756 .58251956 .11651611 .6329753 .17304485 .6582031 .25180055 .6582031 .3527832 .6582031 .4518229 .6335449 .52911379 .5842285 .58465579 .5349121 .64019778 .46777345 .66796877 .3828125 .66796877Z"/>
+<path id="font_1_37" d="M.08984375 0V.7001953H.27392579C.3289388 .7001953 .37272135 .6853841 .40527345 .6557617 .43782554 .62613937 .45410157 .58691409 .45410157 .53808596 .45410157 .49739585 .44327799 .4621582 .42163087 .43237306 .39998374 .4025879 .36979167 .3815104 .3310547 .36914063V.3671875C.37955729 .36263023 .417806 .34529624 .44580079 .31518556 .47379557 .28507487 .48779298 .2467448 .48779298 .20019531 .48779298 .14127605 .46875 .093180339 .43066407 .055908204 .39257813 .018636069 .34163413 0 .27783204 0H.08984375M.1381836 .6557617V.38476563H.23583985C.2866211 .38476563 .3273112 .39778648 .35791017 .42382813 .38850913 .44986979 .4038086 .4851888 .4038086 .52978518 .4038086 .61376956 .35416667 .6557617 .2548828 .6557617H.1381836M.1381836 .3408203V.043945314H.2680664C.32307945 .043945314 .36515299 .057128908 .3942871 .083496097 .42342124 .10986328 .43798829 .14729817 .43798829 .19580078 .43798829 .29248048 .37239585 .3408203 .24121094 .3408203H.1381836Z"/>
+<path id="font_1_55" d="M.27978517 .6557617V0H.2319336V.6557617H.029785157V.7001953H.4819336V.6557617H.27978517Z"/>
+</defs>
+<path transform="matrix(1,0,0,-1,0,156.8)" stroke-width="3.8" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" style="stroke:var(--eiche)" d="M58.3 78.5C58.3 36.52636 80.68576 2.5 108.3 2.5 135.91423 2.5 158.3 36.52636 158.3 78.5 158.3 120.47365 135.91423 154.5 108.3 154.5 80.68576 154.5 58.3 120.47365 58.3 78.5Z"/>
+<path transform="matrix(1,0,0,-1,0,156.8)" stroke-width="3.6" stroke-linecap="round" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" style="stroke:var(--t)" d="M2.3 154.40001V2.5M2.3 87.60001H82.3M82.3 154.40001V25.5C82.3 12.7971 72.0029 2.5 59.3 2.5 46.5971 2.5 36.3 12.7971 36.3 25.5"/>
+<path transform="matrix(1,0,0,-1,0,156.8)" d="M182.8 28.2H183.90001V128.6H182.8Z" style="fill:var(--eiche)"/>
+<use data-text="S" xlink:href="#font_1_54" transform="matrix(23.6,0,0,-23.6,206,73.6)" style="fill:var(--t)"/>
+<use data-text="C" xlink:href="#font_1_38" transform="matrix(23.6,0,0,-23.6,220.98493,73.6)" style="fill:var(--t)"/>
+<use data-text="H" xlink:href="#font_1_43" transform="matrix(23.6,0,0,-23.6,238.89679,73.6)" style="fill:var(--t)"/>
+<use data-text="R" xlink:href="#font_1_53" transform="matrix(23.6,0,0,-23.6,258.12236,73.6)" style="fill:var(--t)"/>
+<use data-text="E" xlink:href="#font_1_40" transform="matrix(23.6,0,0,-23.6,274.47856,73.6)" style="fill:var(--t)"/>
+<use data-text="I" xlink:href="#font_1_44" transform="matrix(23.6,0,0,-23.6,289.53263,73.6)" style="fill:var(--t)"/>
+<use data-text="N" xlink:href="#font_1_49" transform="matrix(23.6,0,0,-23.6,298.16813,73.6)" style="fill:var(--t)"/>
+<use data-text="E" xlink:href="#font_1_40" transform="matrix(23.6,0,0,-23.6,318.1542,73.6)" style="fill:var(--t)"/>
+<use data-text="R" xlink:href="#font_1_53" transform="matrix(23.6,0,0,-23.6,333.20829,73.6)" style="fill:var(--t)"/>
+<use data-text="E" xlink:href="#font_1_40" transform="matrix(23.6,0,0,-23.6,349.56449,73.6)" style="fill:var(--t)"/>
+<use data-text="I" xlink:href="#font_1_44" transform="matrix(23.6,0,0,-23.6,364.61857,73.6)" style="fill:var(--t)"/>
+<use data-text="O" xlink:href="#font_1_50" transform="matrix(38,0,0,-38,206,112.8)" style="fill:var(--t)"/>
+<use data-text="B" xlink:href="#font_1_37" transform="matrix(38,0,0,-38,248.64673,112.8)" style="fill:var(--t)"/>
+<use data-text="E" xlink:href="#font_1_40" transform="matrix(38,0,0,-38,283.03663,112.8)" style="fill:var(--t)"/>
+<use data-text="R" xlink:href="#font_1_53" transform="matrix(38,0,0,-38,315.7566,112.8)" style="fill:var(--t)"/>
+<use data-text="T" xlink:href="#font_1_55" transform="matrix(38,0,0,-38,350.57325,112.8)" style="fill:var(--t)"/>
+</svg>
+<div class="titel"><h1>Meisterstück Dreiklang</h1><p id="kopfzeile">Bilder und 3D-Modell</p></div></div></header>
+<nav id="nav" aria-label="Bereiche"></nav>
+<main id="main"></main>
+
+<div id="gross" role="dialog" aria-modal="true" aria-label="Bild groß">
+  <div id="buehne"></div>
+  <div class="lade" id="lade"></div>
+  <div class="leiste oben">
+    <span id="zaehler"></span><span id="untertitel"></span>
+    <button class="rund" id="zu" aria-label="Schließen"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <button class="rund pfeil" id="zurueckP" aria-label="Vorheriges Bild"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="rund pfeil" id="weiterP" aria-label="Nächstes Bild"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <div class="leiste unten">
+    <div class="schalter" id="tagabend"><button data-z="Tag">Tag</button><button data-z="Abend">Abend</button></div>
+  </div>
+</div>
+
+<script>
+const D = {"gruppen":[{"id":"meisterstueck","titel":"Meisterstück","unter":"17 Modellfotos in Nussbaum","abschnitte":[{"titel":"Rolladen zu – einmal rundum","bilder":[{"id":"Modellfoto_A_000_vorn","gross":"bilder/gross/Modellfoto_A_000_vorn.jpg","klein":"bilder/klein/Modellfoto_A_000_vorn.jpg","w":2400,"h":1600,"text":"Rolladen zu · von vorn"},{"id":"Modellfoto_A_045","gross":"bilder/gross/Modellfoto_A_045.jpg","klein":"bilder/klein/Modellfoto_A_045.jpg","w":2400,"h":1600,"text":"Rolladen zu · 45° gedreht"},{"id":"Modellfoto_A_090_seite","gross":"bilder/gross/Modellfoto_A_090_seite.jpg","klein":"bilder/klein/Modellfoto_A_090_seite.jpg","w":2400,"h":1600,"text":"Rolladen zu · 90° gedreht · Seite"},{"id":"Modellfoto_A_135","gross":"bilder/gross/Modellfoto_A_135.jpg","klein":"bilder/klein/Modellfoto_A_135.jpg","w":2400,"h":1600,"text":"Rolladen zu · 135° gedreht"},{"id":"Modellfoto_A_180_hinten","gross":"bilder/gross/Modellfoto_A_180_hinten.jpg","klein":"bilder/klein/Modellfoto_A_180_hinten.jpg","w":2400,"h":1600,"text":"Rolladen zu · von hinten"},{"id":"Modellfoto_A_225","gross":"bilder/gross/Modellfoto_A_225.jpg","klein":"bilder/klein/Modellfoto_A_225.jpg","w":2400,"h":1600,"text":"Rolladen zu · 225° gedreht"},{"id":"Modellfoto_A_270_seite","gross":"bilder/gross/Modellfoto_A_270_seite.jpg","klein":"bilder/klein/Modellfoto_A_270_seite.jpg","w":2400,"h":1600,"text":"Rolladen zu · 270° gedreht · Seite"},{"id":"Modellfoto_A_315","gross":"bilder/gross/Modellfoto_A_315.jpg","klein":"bilder/klein/Modellfoto_A_315.jpg","w":2400,"h":1600,"text":"Rolladen zu · 315° gedreht"}]},{"titel":"Beide Rolladen offen","bilder":[{"id":"Modellfoto_B_000_vorn","gross":"bilder/gross/Modellfoto_B_000_vorn.jpg","klein":"bilder/klein/Modellfoto_B_000_vorn.jpg","w":2400,"h":1600,"text":"Beide Rolladen offen · von vorn"},{"id":"Modellfoto_B_045_rechts","gross":"bilder/gross/Modellfoto_B_045_rechts.jpg","klein":"bilder/klein/Modellfoto_B_045_rechts.jpg","w":2400,"h":1600,"text":"Beide Rolladen offen · schräg von rechts"},{"id":"Modellfoto_B_315_links","gross":"bilder/gross/Modellfoto_B_315_links.jpg","klein":"bilder/klein/Modellfoto_B_315_links.jpg","w":2400,"h":1600,"text":"Beide Rolladen offen · schräg von links"}]},{"titel":"Schubkästen offen, Rolladen zu","bilder":[{"id":"Modellfoto_C1_000_vorn","gross":"bilder/gross/Modellfoto_C1_000_vorn.jpg","klein":"bilder/klein/Modellfoto_C1_000_vorn.jpg","w":2400,"h":1600,"text":"Schubkästen offen, Rolladen zu · von vorn"},{"id":"Modellfoto_C1_045_rechts","gross":"bilder/gross/Modellfoto_C1_045_rechts.jpg","klein":"bilder/klein/Modellfoto_C1_045_rechts.jpg","w":2400,"h":1600,"text":"Schubkästen offen, Rolladen zu · schräg von rechts"},{"id":"Modellfoto_C1_315_links","gross":"bilder/gross/Modellfoto_C1_315_links.jpg","klein":"bilder/klein/Modellfoto_C1_315_links.jpg","w":2400,"h":1600,"text":"Schubkästen offen, Rolladen zu · schräg von links"}]},{"titel":"Schubkästen und Rolladen offen","bilder":[{"id":"Modellfoto_C2_000_vorn","gross":"bilder/gross/Modellfoto_C2_000_vorn.jpg","klein":"bilder/klein/Modellfoto_C2_000_vorn.jpg","w":2400,"h":1600,"text":"Schubkästen und Rolladen offen · von vorn"},{"id":"Modellfoto_C2_045_rechts","gross":"bilder/gross/Modellfoto_C2_045_rechts.jpg","klein":"bilder/klein/Modellfoto_C2_045_rechts.jpg","w":2400,"h":1600,"text":"Schubkästen und Rolladen offen · schräg von rechts"},{"id":"Modellfoto_C2_315_links","gross":"bilder/gross/Modellfoto_C2_315_links.jpg","klein":"bilder/klein/Modellfoto_C2_315_links.jpg","w":2400,"h":1600,"text":"Schubkästen und Rolladen offen · schräg von links"}]}]},{"id":"raum","titel":"Raumkonzept","unter":"Wohn-Esszimmer · 13 Ansichten bei Tag und am Abend","ansichten":[{"nr":"01","text":"Gesamtblick von der Flurtür nach Süden","Tag":{"id":"Raum_01_Tag","gross":"bilder/gross/Raum_01_Tag.jpg","klein":"bilder/klein/Raum_01_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_01_Abend","gross":"bilder/gross/Raum_01_Abend.jpg","klein":"bilder/klein/Raum_01_Abend.jpg","w":1536,"h":1024}},{"nr":"02","text":"TV-Wand mit TV-Board","Tag":{"id":"Raum_02_Tag","gross":"bilder/gross/Raum_02_Tag.jpg","klein":"bilder/klein/Raum_02_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_02_Abend","gross":"bilder/gross/Raum_02_Abend.jpg","klein":"bilder/klein/Raum_02_Abend.jpg","w":1536,"h":1024}},{"nr":"04","text":"Essplatz mit Meisterstück","Tag":{"id":"Raum_04_Tag","gross":"bilder/gross/Raum_04_Tag.jpg","klein":"bilder/klein/Raum_04_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_04_Abend","gross":"bilder/gross/Raum_04_Abend.jpg","klein":"bilder/klein/Raum_04_Abend.jpg","w":1536,"h":1024}},{"nr":"05","text":"Meisterstück, beide Rolladen offen","Tag":{"id":"Raum_05_Tag","gross":"bilder/gross/Raum_05_Tag.jpg","klein":"bilder/klein/Raum_05_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_05_Abend","gross":"bilder/gross/Raum_05_Abend.jpg","klein":"bilder/klein/Raum_05_Abend.jpg","w":1536,"h":1024}},{"nr":"10","text":"Meisterstück nah, Schubkasten offen","Tag":{"id":"Raum_10_Tag","gross":"bilder/gross/Raum_10_Tag.jpg","klein":"bilder/klein/Raum_10_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_10_Abend","gross":"bilder/gross/Raum_10_Abend.jpg","klein":"bilder/klein/Raum_10_Abend.jpg","w":1536,"h":1024}},{"nr":"11","text":"Meisterstück von vorn","Tag":{"id":"Raum_11_Tag","gross":"bilder/gross/Raum_11_Tag.jpg","klein":"bilder/klein/Raum_11_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_11_Abend","gross":"bilder/gross/Raum_11_Abend.jpg","klein":"bilder/klein/Raum_11_Abend.jpg","w":1536,"h":1024}},{"nr":"12","text":"Meisterstück von links","Tag":{"id":"Raum_12_Tag","gross":"bilder/gross/Raum_12_Tag.jpg","klein":"bilder/klein/Raum_12_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_12_Abend","gross":"bilder/gross/Raum_12_Abend.jpg","klein":"bilder/klein/Raum_12_Abend.jpg","w":1536,"h":1024}},{"nr":"13","text":"Meisterstück von rechts","Tag":{"id":"Raum_13_Tag","gross":"bilder/gross/Raum_13_Tag.jpg","klein":"bilder/klein/Raum_13_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_13_Abend","gross":"bilder/gross/Raum_13_Abend.jpg","klein":"bilder/klein/Raum_13_Abend.jpg","w":1536,"h":1024}},{"nr":"14","text":"Detail: Lamellen und Leiste","Tag":{"id":"Raum_14_Tag","gross":"bilder/gross/Raum_14_Tag.jpg","klein":"bilder/klein/Raum_14_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_14_Abend","gross":"bilder/gross/Raum_14_Abend.jpg","klein":"bilder/klein/Raum_14_Abend.jpg","w":1536,"h":1024}},{"nr":"15","text":"Westwand mit Wandboards","Tag":{"id":"Raum_15_Tag","gross":"bilder/gross/Raum_15_Tag.jpg","klein":"bilder/klein/Raum_15_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_15_Abend","gross":"bilder/gross/Raum_15_Abend.jpg","klein":"bilder/klein/Raum_15_Abend.jpg","w":1536,"h":1024}},{"nr":"16","text":"Gesamtblick mit blauer Bogenleuchte (Variante)","Tag":{"id":"Raum_16_Tag","gross":"bilder/gross/Raum_16_Tag.jpg","klein":"bilder/klein/Raum_16_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_16_Abend","gross":"bilder/gross/Raum_16_Abend.jpg","klein":"bilder/klein/Raum_16_Abend.jpg","w":1536,"h":1024}},{"nr":"18","text":"Westwand weit: Leseecke bis Meisterstück","Tag":{"id":"Raum_18_Tag","gross":"bilder/gross/Raum_18_Tag.jpg","klein":"bilder/klein/Raum_18_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_18_Abend","gross":"bilder/gross/Raum_18_Abend.jpg","klein":"bilder/klein/Raum_18_Abend.jpg","w":1536,"h":1024}},{"nr":"19","text":"Ostwand: Sofa und TV-Wand","Tag":{"id":"Raum_19_Tag","gross":"bilder/gross/Raum_19_Tag.jpg","klein":"bilder/klein/Raum_19_Tag.jpg","w":1536,"h":1024},"Abend":{"id":"Raum_19_Abend","gross":"bilder/gross/Raum_19_Abend.jpg","klein":"bilder/klein/Raum_19_Abend.jpg","w":1536,"h":1024}}]},{"id":"plaene","titel":"Pläne","unter":"5 Pläne zum Raumkonzept","abschnitte":[{"titel":"","bilder":[{"id":"Plan_1_Moeblierung_Leistungen","gross":"bilder/gross/Plan_1_Moeblierung_Leistungen.jpg","klein":"bilder/klein/Plan_1_Moeblierung_Leistungen.jpg","w":2056,"h":1401,"text":"Plan 1 · Möblierung und Leistungen"},{"id":"Plan_2_Zonen_Wege_Blicke","gross":"bilder/gross/Plan_2_Zonen_Wege_Blicke.jpg","klein":"bilder/klein/Plan_2_Zonen_Wege_Blicke.jpg","w":1990,"h":1401,"text":"Plan 2 · Zonen, Wege, Blicke"},{"id":"Plan_3_Licht_Elektro","gross":"bilder/gross/Plan_3_Licht_Elektro.jpg","klein":"bilder/klein/Plan_3_Licht_Elektro.jpg","w":2192,"h":1401,"text":"Plan 3 · Licht und Elektro"},{"id":"Plan_4_Wandabwicklung","gross":"bilder/gross/Plan_4_Wandabwicklung.jpg","klein":"bilder/klein/Plan_4_Wandabwicklung.jpg","w":2295,"h":2890,"text":"Plan 4 · Wandabwicklung"},{"id":"Plan_5_Aufmass_Massketten","gross":"bilder/gross/Plan_5_Aufmass_Massketten.jpg","klein":"bilder/klein/Plan_5_Aufmass_Massketten.jpg","w":2056,"h":1401,"text":"Plan 5 · Aufmaß mit Maßketten"}]}]},{"id":"moodboard","titel":"Moodboard und Materialcollage","unter":"Farben, Materialien, Stimmung","abschnitte":[{"titel":"","bilder":[{"id":"Moodboard_Wohn-Esszimmer","gross":"bilder/gross/Moodboard_Wohn-Esszimmer.jpg","klein":"bilder/klein/Moodboard_Wohn-Esszimmer.jpg","w":3000,"h":2121,"text":"Moodboard Wohn-Esszimmer"},{"id":"Materialcollage_Wohn-Esszimmer","gross":"bilder/gross/Materialcollage_Wohn-Esszimmer.jpg","klein":"bilder/klein/Materialcollage_Wohn-Esszimmer.jpg","w":3000,"h":2121,"text":"Materialcollage Wohn-Esszimmer"}]}]},{"id":"filme","titel":"Filme","unter":"Rundgang um das Meisterstück","filme":[{"id":"Meisterstueck_Rundgang_zu_Licht","film":"filme/Meisterstueck_Rundgang_zu_Licht.mp4","klein":"bilder/klein/Meisterstueck_Rundgang_zu_Licht.jpg","w":1920,"h":1080,"text":"Rundgang · Rolladen zu","dauer":14},{"id":"Meisterstueck_Rundgang_offen_Licht","film":"filme/Meisterstueck_Rundgang_offen_Licht.mp4","klein":"bilder/klein/Meisterstueck_Rundgang_offen_Licht.jpg","w":1920,"h":1080,"text":"Rundgang · Rolladen offen","dauer":14}]}],"fassung":"bilder-664311b900e8","anzahl":129,"hinweisHolz":true,"stand":"19.11.2026","fassungZeit":"19.11.2026, 19:16"};
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const G = Object.fromEntries(D.gruppen.map(g => [g.id, g]));
+let zeit = 'Tag';
+try { zeit = localStorage.getItem('bilder_zeit') === 'Abend' ? 'Abend' : 'Tag'; } catch (e) {}
+
+const SYM = {
+  start:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+  stueck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="10" rx="5"/><path d="M7 15v5M17 15v5M9 7v6M12 7v6M15 7v6"/></svg>',
+  raum:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 20V9l7-5 7 5v11"/><rect x="9" y="13" width="6" height="7"/></svg>',
+  dreid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>'
+};
+const SEITEN = [
+  {id:'start', name:'Start', sym:'start'},
+  {id:'meisterstueck', name:'Meisterstück', sym:'stueck'},
+  {id:'raumkonzept', name:'Raumkonzept', sym:'raum'},
+  {id:'3d', name:'3D-Modell', sym:'dreid', link:'3d.html'}
+];
+
+/* ---------- Listen für die Großansicht ---------- */
+function liste(art) {
+  if (art === 'meisterstueck') return G.meisterstueck.abschnitte.flatMap(a => a.bilder);
+  if (art === 'raum') return G.raum.ansichten.map(v => ({...v[zeit], text: v.text + ' · ' + zeit, ansicht: v}));
+  if (art === 'plaene' || art === 'moodboard') return G[art].abschnitte.flatMap(a => a.bilder);
+  return [];
+}
+
+/* ---------- Seiten bauen ---------- */
+function kachelBild(b, art, i, klasse) {
+  return `<button class="bild ${klasse||''}" data-art="${art}" data-i="${i}" aria-label="${esc(b.text)} groß zeigen">
+    <img src="${b.klein}" alt="${esc(b.text)}" loading="lazy" decoding="async"><span class="txt">${esc(b.text)}</span></button>`;
+}
+function seiteStart() {
+  const m = G.meisterstueck.abschnitte[0].bilder[0];
+  const raum = G.raum.ansichten.find(v => v.nr === '04') || G.raum.ansichten[0];
+  const k = (href, bild, titel, unter, marke, extra) =>
+    `<a class="kachel ${extra||''}" href="${href}">${bild ? `<img src="${bild}" alt="" loading="lazy">` : ''}
+     ${marke ? `<span class="marke">${marke}</span>` : ''}<span class="unten"><b>${titel}</b><span>${unter}</span></span></a>`;
+  const anz = l => l.length;
+  return `<section class="seite" id="s-start">
+    <button class="held" data-art="meisterstueck" data-i="0" aria-label="Modellfoto groß zeigen">
+      <img src="${m.gross}" alt="Meisterstück Dreiklang, Modellfoto von vorn">
+      <span class="schrift"><span class="h2">Dreiklang</span><span class="p">Sideboard in Nussbaum mit zwei Möbelrolladen</span></span>
+    </button>
+    <div class="kacheln">
+      ${k('#meisterstueck', G.meisterstueck.abschnitte[1].bilder[1].klein, 'Modellfotos', 'Meisterstück von allen Seiten', anz(liste('meisterstueck')) + ' Bilder')}
+      ${k('#meisterstueck-filme', G.filme.filme[0].klein, 'Filme', 'Rundgang um das Meisterstück', G.filme.filme.length + ' Filme')}
+      ${k('3d.html', 'bilder/klein/vorschau_3d.jpg', '3D-Modell', 'Drehen, zoomen, Teile ein- und ausblenden', '3D', 'dreid')}
+      ${k('#raumkonzept', raum.Tag.klein, 'Raumbilder', 'Wohn-Esszimmer bei Tag und am Abend', anz(G.raum.ansichten) * 2 + ' Bilder')}
+      ${k('#raumkonzept-plaene', G.plaene.abschnitte[0].bilder[0].klein, 'Pläne', 'Möblierung, Zonen, Licht, Wände, Aufmaß', anz(liste('plaene')) + ' Pläne')}
+      ${k('#raumkonzept-moodboard', G.moodboard.abschnitte[0].bilder[0].klein, 'Moodboard und Materialcollage', 'Farben, Materialien, Stimmung', anz(liste('moodboard')) + ' Bilder')}
+    </div>
+  </section>`;
+}
+function seiteMeisterstueck() {
+  let i = 0, h = `<section class="seite" id="s-meisterstueck"><h2 class="titel">Meisterstück</h2>
+    <p class="unter">${esc(G.meisterstueck.unter)} · antippen für groß, wischen für das nächste Bild</p>`;
+  for (const a of G.meisterstueck.abschnitte) {
+    h += `<h3>${esc(a.titel)} <small>${a.bilder.length} Bilder</small></h3><div class="raster">`;
+    for (const b of a.bilder) h += kachelBild(b, 'meisterstueck', i++);
+    h += '</div>';
+  }
+  h += `<h3 id="meisterstueck-filme">Filme <small>${esc(G.filme.unter)}</small></h3><div class="raster breit">`;
+  G.filme.filme.forEach((f, j) => {
+    h += `<button class="bild" data-film="${j}" aria-label="${esc(f.text)} abspielen"><img src="${f.klein}" alt="" loading="lazy">
+      <span class="spiel"><i><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></i></span>
+      <span class="txt">${esc(f.text)} · ${f.dauer} s</span></button>`;
+  });
+  h += '</div>';
+  h += `<h3>3D-Modell</h3><div class="raster breit"><a class="kachel dreid" href="3d.html" style="aspect-ratio:3/1"><img src="bilder/klein/vorschau_3d.jpg" alt="" loading="lazy" style="object-fit:contain">
+    <span class="marke">3D</span><span class="unten"><b>Meisterstück in 3D öffnen</b><span>Drehen, zoomen, Teile ein- und ausblenden</span></span></a></div>`;
+  return h + '</section>';
+}
+function seiteRaum() {
+  let h = `<section class="seite" id="s-raumkonzept"><h2 class="titel">Raumkonzept</h2><p class="unter">${esc(G.raum.unter)}</p>`;
+  h += `<h3>Raumbilder <small>${G.raum.ansichten.length} Ansichten</small></h3>`;
+  if (D.hinweisHolz) h += `<p class="hinweis">Die Raumbilder zeigen das Meisterstück noch im Stand vor dem Holzwechsel; sie werden nach und nach in Nussbaum ersetzt.</p>`;
+  h += `<div class="schalter" id="zeitwahl" style="margin-bottom:12px"><button data-z="Tag">Tag</button><button data-z="Abend">Abend</button></div>
+    <div class="raster" id="raumraster"></div>`;
+  h += `<h3 id="raumkonzept-plaene">Pläne <small>${liste('plaene').length} Pläne</small></h3><div class="raster breit">`;
+  liste('plaene').forEach((b, i) => h += kachelBild(b, 'plaene', i, 'plan'));
+  h += `</div><h3 id="raumkonzept-moodboard">Moodboard und Materialcollage</h3><div class="raster breit">`;
+  liste('moodboard').forEach((b, i) => h += kachelBild(b, 'moodboard', i, 'plan'));
+  return h + '</div></section>';
+}
+function raumRaster() {
+  $('#raumraster').innerHTML = liste('raum').map((b, i) => kachelBild(b, 'raum', i)).join('');
+  document.querySelectorAll('#zeitwahl button,#tagabend button').forEach(b => b.classList.toggle('an', b.dataset.z === zeit));
+}
+function setzeZeit(z) {
+  zeit = z;
+  try { localStorage.setItem('bilder_zeit', z); } catch (e) {}
+  raumRaster();
+}
+
+function baue() {
+  $('#kopfzeile').textContent = `Bilder und 3D-Modell · ${liste('meisterstueck').length} Modellfotos · ${G.raum.ansichten.length * 2} Raumbilder · ${liste('plaene').length} Pläne · ${G.filme.filme.length} Filme · Stand ${D.stand}`;
+  $('#nav').innerHTML = SEITEN.map(s => `<a href="${s.link || '#' + s.id}" data-s="${s.id}">${SYM[s.sym]}${s.name}</a>`).join('');
+  $('#main').innerHTML = seiteStart() + seiteMeisterstueck() + seiteRaum() +
+    `<footer><span id="offline">⟳ Wird für die Nutzung ohne Internet gespeichert …</span><span title="${esc(D.fassung)}">Fassung vom ${esc(D.fassungZeit)}</span></footer>`;
+  raumRaster();
+  $('#zeitwahl').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setzeZeit(b.dataset.z); });
+  $('#main').addEventListener('click', e => {
+    const f = e.target.closest('[data-film]');
+    if (f) { e.preventDefault(); return oeffneFilm(+f.dataset.film); }
+    const b = e.target.closest('[data-art]');
+    if (b) { e.preventDefault(); oeffne(b.dataset.art, +b.dataset.i); }
+  });
+}
+function zeige() {
+  const h = decodeURIComponent(location.hash.slice(1)) || 'start';
+  const seite = h.split('-')[0];
+  const ziel = ['start', 'meisterstueck', 'raumkonzept'].includes(seite) ? seite : 'start';
+  document.querySelectorAll('.seite').forEach(s => s.classList.toggle('an', s.id === 's-' + ziel));
+  document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('an', a.dataset.s === ziel));
+  const anker = h.includes('-') ? document.getElementById(h) : null;
+  requestAnimationFrame(() => anker ? anker.scrollIntoView({block: 'start'}) : window.scrollTo(0, 0));
+}
+
+/* ---------- Großansicht mit Zoom (zwei Finger, Doppeltippen) und Wischen ---------- */
+const V = {art: null, i: 0, l: [], img: null, s: 1, x: 0, y: 0, grund: 1, nw: 0, nh: 0};
+const zeiger = new Map();
+let geste = null, letzterTipp = 0, ruheTimer = null;
+
+function oeffne(art, i) {
+  V.art = art; V.l = liste(art); V.i = i;
+  $('#tagabend').classList.toggle('da', art === 'raum');
+  $('#gross').classList.add('an'); $('#gross').classList.remove('ruhig');
+  document.body.style.overflow = 'hidden';
+  history.pushState({gross: 1}, '');
+  ladeBild();
+}
+function schliesse(ausVerlauf) {
+  if (!$('#gross').classList.contains('an')) return;
+  $('#gross').classList.remove('an');
+  $('#buehne').innerHTML = '';
+  document.body.style.overflow = '';
+  if (!ausVerlauf && history.state && history.state.gross) history.back();
+}
+function ladeBild() {
+  const b = V.l[V.i], buehne = $('#buehne');
+  $('#zaehler').textContent = `${V.i + 1} / ${V.l.length}`;
+  $('#untertitel').textContent = b.text;
+  $('#zurueckP').style.visibility = V.l.length > 1 ? '' : 'hidden';
+  $('#weiterP').style.visibility = V.l.length > 1 ? '' : 'hidden';
+  buehne.innerHTML = '';
+  const img = new Image();
+  img.alt = b.text; img.decoding = 'async'; img.draggable = false;
+  img.src = b.klein;                        // sofort die kleine Fassung, dann scharf
+  V.img = img; V.nw = b.w; V.nh = b.h;
+  img.style.width = b.w + 'px'; img.style.height = b.h + 'px';
+  buehne.appendChild(img);
+  passend();
+  const scharf = new Image();
+  $('#lade').classList.add('an');
+  scharf.onload = () => { if (V.img === img) { img.src = b.gross; } $('#lade').classList.remove('an'); };
+  scharf.onerror = () => $('#lade').classList.remove('an');
+  scharf.src = b.gross;
+  // Nachbarn vorladen
+  [V.i + 1, V.i - 1].forEach(j => { const n = V.l[(j + V.l.length) % V.l.length]; if (n) { const p = new Image(); p.src = n.gross; } });
+  document.querySelectorAll('#tagabend button').forEach(x => x.classList.toggle('an', x.dataset.z === zeit));
+}
+function masse() { const r = $('#buehne').getBoundingClientRect(); return {w: r.width, h: r.height}; }
+function passend() {
+  const m = masse();
+  V.grund = Math.min(m.w / V.nw, m.h / V.nh);
+  V.s = V.grund; V.x = (m.w - V.nw * V.s) / 2; V.y = (m.h - V.nh * V.s) / 2;
+  setze(false);
+}
+function begrenze() {
+  const m = masse(), bw = V.nw * V.s, bh = V.nh * V.s;
+  V.x = bw <= m.w ? (m.w - bw) / 2 : Math.min(0, Math.max(m.w - bw, V.x));
+  V.y = bh <= m.h ? (m.h - bh) / 2 : Math.min(0, Math.max(m.h - bh, V.y));
+}
+function setze(weich) {
+  if (!V.img) return;
+  V.img.style.transition = weich ? 'transform .25s ease' : 'none';
+  V.img.style.transform = `translate(${V.x}px,${V.y}px) scale(${V.s})`;
+}
+function zoomUm(px, py, neu) {
+  neu = Math.max(V.grund, Math.min(V.grund * 6, neu));
+  V.x = px - (px - V.x) * neu / V.s; V.y = py - (py - V.y) * neu / V.s; V.s = neu;
+  begrenze();
+}
+function blaettern(d) {
+  if (V.l.length < 2) return;
+  V.i = (V.i + d + V.l.length) % V.l.length; ladeBild();
+}
+function ruhe() { clearTimeout(ruheTimer); $('#gross').classList.remove('ruhig'); }
+
+const B = $('#buehne');
+B.addEventListener('pointerdown', e => {
+  B.setPointerCapture(e.pointerId);
+  zeiger.set(e.pointerId, {x: e.clientX, y: e.clientY});
+  if (zeiger.size === 1) geste = {art: 'eins', sx: e.clientX, sy: e.clientY, x0: V.x, y0: V.y, t: Date.now(), bewegt: false};
+  if (zeiger.size === 2) {
+    const [a, b] = [...zeiger.values()];
+    geste = {art: 'zwei', d0: Math.hypot(a.x - b.x, a.y - b.y), s0: V.s, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, x0: V.x, y0: V.y};
+  }
+});
+B.addEventListener('pointermove', e => {
+  if (!zeiger.has(e.pointerId) || !geste) return;
+  zeiger.set(e.pointerId, {x: e.clientX, y: e.clientY});
+  const r = B.getBoundingClientRect();
+  if (geste.art === 'zwei' && zeiger.size >= 2) {
+    const [a, b] = [...zeiger.values()];
+    const d = Math.hypot(a.x - b.x, a.y - b.y), mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    const neu = Math.max(V.grund * .8, Math.min(V.grund * 6, geste.s0 * d / geste.d0));
+    const px = geste.mx - r.left, py = geste.my - r.top;
+    V.s = neu; V.x = px - (px - geste.x0) * neu / geste.s0 + (mx - geste.mx); V.y = py - (py - geste.y0) * neu / geste.s0 + (my - geste.my);
+    setze(false);
+  } else if (geste.art === 'eins') {
+    const dx = e.clientX - geste.sx, dy = e.clientY - geste.sy;
+    if (Math.abs(dx) + Math.abs(dy) > 8) geste.bewegt = true;
+    if (V.s > V.grund * 1.01) { V.x = geste.x0 + dx; V.y = geste.y0 + dy; begrenze(); setze(false); }
+    else { V.x = geste.x0 + dx; V.y = geste.y0 + Math.max(0, dy) * .6; setze(false);   // mitziehen beim Wischen
+      $('#gross').style.background = `rgba(0,0,0,${Math.max(.4, 1 - Math.max(0, dy) / 600)})`; }
+  }
+});
+function los(e) {
+  if (!zeiger.has(e.pointerId)) return;
+  zeiger.delete(e.pointerId);
+  if (!geste) return;
+  if (geste.art === 'zwei') {
+    if (zeiger.size === 0) { if (V.s < V.grund) passend(); begrenze(); setze(true); geste = null; }
+    else { const [a] = [...zeiger.values()]; geste = {art: 'eins', sx: a.x, sy: a.y, x0: V.x, y0: V.y, t: Date.now(), bewegt: true}; }
+    return;
+  }
+  const dx = e.clientX - geste.sx, dy = e.clientY - geste.sy, schnell = Date.now() - geste.t < 350;
+  $('#gross').style.background = '';
+  if (V.s <= V.grund * 1.01) {
+    if (dy > 110 && Math.abs(dy) > Math.abs(dx)) { geste = null; return schliesse(); }
+    if (Math.abs(dx) > 70 || (schnell && Math.abs(dx) > 30)) { geste = null; return blaettern(dx < 0 ? 1 : -1); }
+    passend();
+    setze(true);
+  }
+  if (!geste.bewegt) {          // Tippen
+    const jetzt = Date.now(), r = B.getBoundingClientRect();
+    if (jetzt - letzterTipp < 300) {
+      letzterTipp = 0;
+      if (V.s > V.grund * 1.01) passend(); else zoomUm(e.clientX - r.left, e.clientY - r.top, V.grund * 2.5);
+      setze(true);
+    } else {
+      letzterTipp = jetzt;
+      setTimeout(() => { if (letzterTipp === jetzt) $('#gross').classList.toggle('ruhig'); }, 310);
+    }
+  }
+  geste = null;
+}
+B.addEventListener('pointerup', los);
+B.addEventListener('pointercancel', los);
+B.addEventListener('wheel', e => {
+  e.preventDefault(); const r = B.getBoundingClientRect();
+  zoomUm(e.clientX - r.left, e.clientY - r.top, V.s * (e.deltaY < 0 ? 1.15 : 1 / 1.15)); setze(false);
+}, {passive: false});
+$('#zu').onclick = () => schliesse();
+$('#zurueckP').onclick = () => { ruhe(); blaettern(-1); };
+$('#weiterP').onclick = () => { ruhe(); blaettern(1); };
+$('#tagabend').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || b.dataset.z === zeit) return;
+  setzeZeit(b.dataset.z); V.l = liste('raum'); ladeBild();
+});
+addEventListener('keydown', e => {
+  if (!$('#gross').classList.contains('an')) return;
+  if (e.key === 'Escape') schliesse();
+  if (e.key === 'ArrowRight') blaettern(1);
+  if (e.key === 'ArrowLeft') blaettern(-1);
+});
+addEventListener('resize', () => { if ($('#gross').classList.contains('an') && V.img) passend(); });
+addEventListener('popstate', () => schliesse(true));
+
+/* ---------- Filme ---------- */
+function oeffneFilm(j) {
+  const f = G.filme.filme[j];
+  V.art = 'film'; V.img = null; V.l = [];
+  $('#tagabend').classList.remove('da');
+  $('#zaehler').textContent = `${j + 1} / ${G.filme.filme.length}`;
+  $('#untertitel').textContent = f.text;
+  $('#zurueckP').style.visibility = 'hidden'; $('#weiterP').style.visibility = 'hidden';
+  $('#buehne').innerHTML = `<video src="${f.film}" poster="${f.klein}" controls playsinline autoplay muted loop preload="auto"></video>`;
+  $('#gross').classList.add('an'); $('#gross').classList.remove('ruhig');
+  document.body.style.overflow = 'hidden';
+  history.pushState({gross: 1}, '');
+}
+
+/* ---------- Offline-Stand anzeigen ---------- */
+async function offlineStand() {
+  const el = $('#offline');
+  if (!('caches' in window) || !('serviceWorker' in navigator)) { el.textContent = 'Ohne Internet nicht verfügbar (Browser kann es nicht)'; el.className = 'warn'; return; }
+  try {
+    const c = await caches.open(D.fassung);
+    const n = (await c.keys()).length;
+    if (n >= D.anzahl) { el.textContent = '✓ Auf diesem Gerät gespeichert – geht auch ohne Internet'; el.className = 'gut'; return; }
+    el.textContent = `⟳ Wird für die Nutzung ohne Internet gespeichert … (${n} von ${D.anzahl})`; el.className = '';
+    setTimeout(offlineStand, 2500);
+  } catch (e) {
+    el.textContent = e && e.name === 'QuotaExceededError' ? '⚠ Speicher auf dem Gerät voll – ohne Internet nicht alles verfügbar' : '⚠ Offline-Speicher nicht verfügbar';
+    el.className = 'warn';
+  }
+}
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+
+baue(); zeige();
+addEventListener('hashchange', zeige);
+offlineStand();
+</script>
+</body>
+</html>
